@@ -68,6 +68,7 @@ body {
 <div class="section-header">Authentication</div>
 <p>Tech username: <input type="text" id="username" oninput="markDirty()">
 <p>Password: <input type="password" id="password" oninput="markDirty()">
+<p><input type="checkbox" id="saveUserPass" onchange="markDirty()"><label for="saveUserPass">Save username and password</label>
 <div class="section-header">Badge</div>
 <p>Badge: 
 	<select id="badge" onchange="markDirty()">
@@ -104,16 +105,21 @@ function init() {
   useSslCheckbox = document.getElementById("ssl");
   usernameTextbox = document.getElementById("username");
   passwordTextbox = document.getElementById("password");
+  saveUserPassCheckbox = document.getElementById("saveUserPass");
   badgeSelection = document.getElementById("badge");
   intervalSelection = document.getElementById("interval");
   saveButton = document.getElementById("save-button");
+  
+  var username = chrome.extension.getBackgroundPage().getUsername();
+  var password = chrome.extension.getBackgroundPage().getMd5Password();
 
   urlTextbox.value = localStorage.url || "";
   hostedServerTextbox.value = localStorage.hostedServer || "www.webhelpdesk.com";
   subscriberTextbox.value = localStorage.subscriber || "";
-  useSslCheckbox.checked = localStorage.ssl ? (localStorage.ssl === "true") : "true";
-  usernameTextbox.value = localStorage.username || "";
-  passwordTextbox.value = (localStorage.md5password ? "*****" : ""); ///localStorage.password || "";
+  useSslCheckbox.checked = localStorage.ssl ? (localStorage.ssl === "true") : true;
+  usernameTextbox.value = username; //(localStorage.saveUserPass === "true") ? (localStorage.username || "") : (sessionStorage.username || "");
+  passwordTextbox.value = (password != "") ? "*****" : ""; //(localStorage.saveUserPass === "true") ? (localStorage.md5password ? "*****" : "") : (sessionStorage.md5password ? "*****" : ""); ///localStorage.password || "";
+  saveUserPassCheckbox.checked = localStorage.saveUserPass ? (localStorage.saveUserPass === "true") : false;
   badgeSelection.selectedIndex = localStorage.badgeSelectionIdx || 1;
   intervalSelection.selectedIndex = localStorage.intervalSelectionIdx || 0;
 
@@ -126,9 +132,25 @@ function save() {
   localStorage.hostedServer = hostedServerTextbox.value;
   localStorage.subscriber = subscriberTextbox.value;
   localStorage.ssl = useSslCheckbox.checked ? "true" : "false";
-  localStorage.username = usernameTextbox.value;
-  if( passwordTextbox.value != "*****" && passwordTextbox.value != "" ) {
-	localStorage.md5password = b64_md5( passwordTextbox.value );
+  localStorage.saveUserPass = saveUserPassCheckbox.checked ? "true" : "false";
+  /*
+  if(localStorage.saveUserPass === "true" ) {
+	localStorage.username = usernameTextbox.value;
+	if( passwordTextbox.value != "*****" && passwordTextbox.value != "" ) {
+	  localStorage.md5password = b64_md5( passwordTextbox.value );
+	  passwordTextbox.value = "*****";
+	}
+  } else {
+	sessionStorage.username = usernameTextbox.value;
+	if( passwordTextbox.value != "*****" && passwordTextbox.value != "" ) {
+	  sessionStorage.md5password = b64_md5( passwordTextbox.value );
+	  passwordTextbox.value = "*****";
+	}
+  }*/
+  // Because localStorage is page-specific, the function to save the username and password needs to exist
+  //  in the background page.  But... we can still call it from here!
+  chrome.extension.getBackgroundPage().setUserPass(usernameTextbox.value, passwordTextbox.value);
+  if(passwordTextbox.value != "") {
 	passwordTextbox.value = "*****";
   }
   localStorage.badgeSelectionIdx = badgeSelection.selectedIndex;

@@ -68,16 +68,44 @@
 		return server;
 	}
 	
+	function setUserPass(username, password) {
+		if(localStorage.saveUserPass === "true" ) {
+			localStorage.username = username;
+			if( password != "*****" && password != "" ) {
+				localStorage.md5password = b64_md5( password );
+				//passwordTextbox.value = "*****";
+			}
+		} else {
+			sessionStorage.username = username;
+			if( password != "*****" && password != "" ) {
+				sessionStorage.md5password = b64_md5( password );
+				//passwordTextbox.value = "*****";
+			}
+		}
+	}
+	
     function getUsername() {
-		return localStorage.username;
+		if(localStorage.saveUserPass === "true") {
+			return localStorage.username || "";
+		} else {
+			return sessionStorage.username || "";
+		}
 	}
 	
 	function getPassword() {
-		return localStorage.password;
+		if(localStorage.saveUserPass === "true") {
+			return localStorage.password || "";
+		} else {
+			return sessionStorage.password || "";
+		}
 	}
 	
 	function getMd5Password() {
-		return localStorage.md5password;
+		if(localStorage.saveUserPass === "true") {
+			return localStorage.md5password || "";
+		} else {
+			return sessionStorage.md5password || "";
+		}
 		/*
 		//alert( "in getMd5Password");
 		//alert( "password = " + getPassword() );
@@ -205,18 +233,40 @@
 					badgeCount = 0;
 				}
 				
+				
+				if(badgeCount > localStorage.badgeCount) {
+					// If new badge count has more tickets, there's a new or updated ticket to look at!
+					whdNotify( badgeCount );
+				}
+				
 				// store in settings so it persists between launches
 				localStorage.badgeCount = badgeCount;	
 				updateBadge( badgeCount );	
+				chrome.browserAction.setPopup({popup: ""});
 			},
             error:function (xhr, textStatus, thrownError){
 				badgeCount = 0;
 				updateBadge( badgeCount );
-				alert( xhr.status + " error while fetching tech badge count. Check your Options settings." );
-				log_error( "Error while fetching badge count: " + xhr.status + " (" + thrownError + ") -- check your Options settings.");
+				if(getUsername() != "" && getMd5Password() != "") { // Only throw error if username and password are not filled out
+					alert( xhr.status + " error while fetching tech badge count. Check your Options settings." );
+					log_error( "Error while fetching badge count: " + xhr.status + " (" + thrownError + ") -- check your Options settings.");
+				} else {
+					updateBadge( "login" );
+					chrome.browserAction.setPopup({popup: "popup.html"});
+				}
              }
           });
     }
+	
+	function whdNotify(n) {
+		var notification = webkitNotifications.createNotification(
+			'icon_128.png',
+			'New or Updated Ticket',
+			'New/Updated ticket count is now '+n+'.'
+		);
+		notification.onshow  = notification.ondisplay = function() { setTimeout(function() { notification.cancel(); }, 5000); };
+		notification.show();
+	}
     
     function updateBadge(n) {
 		if( n == 0 )
@@ -254,7 +304,19 @@
 	
 	// Called when the user clicks on the browser action.
 	chrome.browserAction.onClicked.addListener(function(tab) {
-	  goToHelpdesk();
+	  chrome.browserAction.getPopup({}, function(pop) {
+		if(pop == "") {
+			goToHelpdesk();
+		}
+	  });
+	});
+	
+	chrome.extension.onMessage.addListener(function (details) {
+		if(details['act'] == "loginInit") {
+			setUserPass(details['username'], details['password']);
+			init();
+		}
+		return true;
 	});
 
 
