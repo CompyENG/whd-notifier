@@ -1,0 +1,40 @@
+{
+   "whdnotifier_config_help": {
+      "message": "Select extension options (right-click the WHD Notifier icon) to configure the connection to your Web Help Desk server."
+   },
+   "whdnotifier_description": {
+      "message": "Displays Web Help Desk ticket count in toolbar. (Requires Web Help Desk 10.0.8 or later.)"
+   },
+   "whdnotifier_exception": {
+      "message": "exception: $1",
+      "placeholders": {
+         "1": {
+            "content": "$1"
+         }
+      }
+   },
+   "whdnotifier_invalid_config": {
+      "message": "Invalid configuration. You must provide a Login URL or Hosted Account #, but not both. (See extension options.)"
+   },
+   "whdnotifier_missing_username_or_password": {
+      "message": "To enable the badge count, you must provide a tech username and password."
+   },
+   "whdnotifier_name": {
+      "message": "WHD Notifier"
+   },
+   "whdnotifier_options": {
+      "message": "WHD Notifier Options"
+   },
+   "whdnotifier_url_example": {
+      "message": "Example:\nhttp://mydomain.com:8081/helpdesk/WebObjects/Helpdesk.woa"
+   },
+   "whdnotifier_url_missing_adaptor": {
+      "message": "Your login URL appears to be incorrect. Login URLs typically contain either \"/helpdesk/WebObjects/\" or \"/cgi-bin/WebObjects/\"."
+   },
+   "whdnotifier_url_missing_proto": {
+      "message": "Your Login URL appears to be incorrect. Login URLs should begin with \"http://\" or \"https://\"."
+   },
+   "whdnotifier_url_missing_woa": {
+      "message": "Your Login URL appears to be incorrect. Login URLs typically end with \".woa\"."
+   }
+}

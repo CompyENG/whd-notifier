@@ -1,0 +1,17 @@
+{
+   "background_page": "background.html",
+   "browser_action": {
+      "default_title": ""
+   },
+   "default_locale": "en",
+   "description": "__MSG_whdnotifier_description__",
+   "icons": {
+      "128": "icon_128.png"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDHiOjPPZI60iqzrx0b82EtXbwrzO2PGvK2Qm7dQ/pNy4E46NHSjlN+gugFr31yuMOxwGB36vzK61+o92QbU2xlNpvYRTLqjHd306Qr18anH1/ZwJ5Vi+hcDexV/nXPZwJOKL8nZhbtLMiSVHJN4+ZNc6Lpa7qdiC80HC+Hau8RwIDAQAB",
+   "name": "__MSG_whdnotifier_name__",
+   "options_page": "options.html",
+   "permissions": [ "tabs", "http://*/", "https://*/" ],
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "1.1"
+}

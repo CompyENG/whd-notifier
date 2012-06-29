@@ -1,0 +1,165 @@
+<html>
+<head>
+<title>WHD Notifier - Options</title>
+<script src="md5.js"></script>
+<style>
+body {
+  font-family:helvetica, arial, sans-serif;
+  font-size:80%;
+  margin:10px;
+}
+
+#header {
+  padding-bottom:1.5em;
+  padding-top:1.5em;
+}
+
+#header h1 {
+  font-size: 156%;
+  display:inline;
+  padding-bottom:43px;
+  padding-left:75px;
+  padding-top:40px;
+  background:url(icon_128.png) no-repeat;
+  background-size:67px;
+  background-position:1px 18px;
+}
+
+.section-header {
+  background:#ebeff9;
+  border-top:1px solid #b5c7de;
+  font-size:99%;
+  padding:3px 0 2px 5px;
+  font-weight:bold;
+  margin-bottom:1em;
+  margin-top:3em;
+}
+
+.section-header.first {
+  margin-top:2em;
+}
+
+#url {
+  width:400px;
+  margin-left:2px;
+}
+
+#footer {
+  margin-top:4em;
+}
+</style>
+</head>
+<body>
+
+<form action="javascript:save()">
+<div id="header"><h1>WHD Notifier Options</h1></div>
+
+<div class="section-header first">Server</div>
+<p><strong>Standard Deployments</strong>
+<p>Login URL: <input type="text" id="url" oninput="markDirty()">
+    <em>(ends in ".woa")</em>
+
+<p style="padding-top:20px"><strong>Hosted Accounts</strong>
+<p>Server: <input type="text" id="hostedServer" oninput="markDirty()" size="40">
+<p>Account #: <input type="text" id="subscriber" oninput="markDirty()" size="4" maxlength="3">
+    <em>If using hosted account, leave Login URL blank (above).</em>
+<p><input type="checkbox" id="ssl" onchange="markDirty()">Use SSL
+
+<div class="section-header">Authentication</div>
+<p>Tech username: <input type="text" id="username" oninput="markDirty()">
+<p>Password: <input type="password" id="password" oninput="markDirty()">
+<div class="section-header">Badge</div>
+<p>Badge: 
+	<select id="badge" onchange="markDirty()">
+		<option value="1">My new tickets</option>
+		<option value="2">My new &amp; updated tickets</option>
+		<option value="3">Group new tickets</option>
+		<option value="4">Group new &amp; updated tickets</option>
+	</select>
+<p>Refresh Interval: 
+	<select id="interval" onchange="markDirty()">
+		<option value="60">1 minute</option>
+		<option value="120">2 minutes</option>
+		<option value="300">5 minutes</option>
+		<option value="600">10 minutes</option>
+	</select>
+<div id="footer">
+  <button id="save-button" style="font-weight:bold" onclick="save()">Save</button>
+  <button onclick="init()">Cancel</button>
+</div>
+
+<script>
+var customDomainsTextbox;
+var saveButton;
+
+String.prototype.endsWith = function(str) {return (this.match(str+"$")==str)}
+String.prototype.startsWith = function(str) {return (this.match("^"+str)==str)}
+
+init();
+
+function init() {
+  urlTextbox = document.getElementById("url");
+  hostedServerTextbox = document.getElementById("hostedServer");
+  subscriberTextbox = document.getElementById("subscriber");
+  useSslCheckbox = document.getElementById("ssl");
+  usernameTextbox = document.getElementById("username");
+  passwordTextbox = document.getElementById("password");
+  badgeSelection = document.getElementById("badge");
+  intervalSelection = document.getElementById("interval");
+  saveButton = document.getElementById("save-button");
+
+  urlTextbox.value = localStorage.url || "";
+  hostedServerTextbox.value = localStorage.hostedServer || "www.webhelpdesk.com";
+  subscriberTextbox.value = localStorage.subscriber || "";
+  useSslCheckbox.checked = localStorage.ssl ? (localStorage.ssl === "true") : "true";
+  usernameTextbox.value = localStorage.username || "";
+  passwordTextbox.value = (localStorage.md5password ? "*****" : ""); ///localStorage.password || "";
+  badgeSelection.selectedIndex = localStorage.badgeSelectionIdx || 1;
+  intervalSelection.selectedIndex = localStorage.intervalSelectionIdx || 0;
+
+  markClean();
+}
+
+function save() {
+	//alert( 'saving...');
+  localStorage.url = urlTextbox.value;
+  localStorage.hostedServer = hostedServerTextbox.value;
+  localStorage.subscriber = subscriberTextbox.value;
+  localStorage.ssl = useSslCheckbox.checked ? "true" : "false";
+  localStorage.username = usernameTextbox.value;
+  if( passwordTextbox.value != "*****" && passwordTextbox.value != "" ) {
+	localStorage.md5password = b64_md5( passwordTextbox.value );
+	passwordTextbox.value = "*****";
+  }
+  localStorage.badgeSelectionIdx = badgeSelection.selectedIndex;
+  localStorage.badge = badgeSelection.options[badgeSelection.selectedIndex].value;
+  localStorage.intervalSelectionIdx = intervalSelection.selectedIndex;
+  localStorage.update = intervalSelection.options[intervalSelection.selectedIndex].value;
+
+  markClean();
+
+  // init takes care of validation, returns true if validation passes
+  if( chrome.extension.getBackgroundPage().init() ) {
+	
+	// username & password aren't strictly required, so that the button can serve simply as a shortcut to the login page
+	if( ! usernameTextbox.value || ! passwordTextbox.value ) {
+	    alert( chrome.i18n.getMessage( "whdnotifier_missing_username_or_password" ) );
+    }
+  }
+
+}
+
+
+function markDirty() {
+//alert('dirty');
+  saveButton.disabled = false;
+}
+
+function markClean() {
+//	alert('clean');
+  saveButton.disabled = true;
+}
+</script>
+</form>
+</body>
+</html>
