@@ -23,4 +23,4 @@ Todo
     * Custom refresh timer
     * Turn off automatically grabbing credentials
     * Automatically grab URL of WHD install, as well as credentials
-3. Ideas? E-mail bobby.graese[AT]gmail[DOT]com
+3. Ideas? [File an enhancement issue](https://github.com/TrueJournals/whd-notifier/issues/new)
