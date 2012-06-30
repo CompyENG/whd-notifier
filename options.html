@@ -78,12 +78,14 @@ body {
 		<option value="4">Group new &amp; updated tickets</option>
 	</select>
 <p>Refresh Interval: 
-	<select id="interval" onchange="markDirty()">
+	<select id="interval" onchange="updateInt();markDirty()">
 		<option value="60">1 minute</option>
 		<option value="120">2 minutes</option>
 		<option value="300">5 minutes</option>
 		<option value="600">10 minutes</option>
+		<option value="custom">Custom</option>
 	</select>
+	<span id="customTimer" style="display:none"><label for="timerSeconds">Refresh interval (in seconds): </label><input type="text" id="timerSeconds" onchange="markDirty()"></span>
 <div id="footer">
   <button id="save-button" style="font-weight:bold" onclick="save()">Save</button>
   <button onclick="init()">Cancel</button>
@@ -108,6 +110,8 @@ function init() {
   saveUserPassCheckbox = document.getElementById("saveUserPass");
   badgeSelection = document.getElementById("badge");
   intervalSelection = document.getElementById("interval");
+  customTimerSpan = document.getElementById("customTimer");
+  timerSecondsTextbox = document.getElementById("timerSeconds");
   saveButton = document.getElementById("save-button");
   
   var username = chrome.extension.getBackgroundPage().getUsername();
@@ -122,6 +126,10 @@ function init() {
   saveUserPassCheckbox.checked = localStorage.saveUserPass ? (localStorage.saveUserPass === "true") : false;
   badgeSelection.selectedIndex = localStorage.badgeSelectionIdx || 1;
   intervalSelection.selectedIndex = localStorage.intervalSelectionIdx || 0;
+  timerSeconds.value = localStorage.update || 60;
+  if(intervalSelection.options[intervalSelection.selectedIndex].value == "custom") {
+    customTimerSpan.style.display = "";
+  }
 
   markClean();
 }
@@ -156,7 +164,11 @@ function save() {
   localStorage.badgeSelectionIdx = badgeSelection.selectedIndex;
   localStorage.badge = badgeSelection.options[badgeSelection.selectedIndex].value;
   localStorage.intervalSelectionIdx = intervalSelection.selectedIndex;
-  localStorage.update = intervalSelection.options[intervalSelection.selectedIndex].value;
+  if(intervalSelection.options[intervalSelection.selectedIndex].value == "custom") {
+    localStorage.update = timerSeconds.value;
+  } else {
+    localStorage.update = intervalSelection.options[intervalSelection.selectedIndex].value;
+  }
 
   markClean();
 
@@ -180,6 +192,14 @@ function markDirty() {
 function markClean() {
 //	alert('clean');
   saveButton.disabled = true;
+}
+
+function updateInt() {
+    if(intervalSelection.options[intervalSelection.selectedIndex].value == "custom") {
+        customTimerSpan.style.display = "";
+    } else {
+        customTimerSpan.style.display = "none";
+    }
 }
 </script>
 </form>
