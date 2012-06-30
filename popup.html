@@ -10,27 +10,13 @@
 			}
 		</style>
 		
-		<script>
-			function save() {
-				usernameTextbox = document.getElementById('username');
-				passwordTextbox = document.getElementById('password');
-				
-				chrome.extension.getBackgroundPage().setUserPass(usernameTextbox.value, passwordTextbox.value);
-				
-				if(passwordTextbox.value != "") {
-					passwordTextbox.value = "*****";
-				}
-				chrome.extension.getBackgroundPage().init();
-				window.close();
-				return false;
-			}
-		</script>
+		<script src="popup.js"></script>
 	</head>
 	<body>
-		<form onsubmit="save()">
+		<form>
 			<label for="username">Username:</label><input type="text" id="username" tabindex="1"><br>
 			<label for="password">Password:</label><input type="password" id="password" tabindex="2"><br>
-			<button onclick="save()" tabindex="3">Save</button>
+			<button id="save-button" tabindex="3">Save</button>
 		</form>
 	</body>
 </html>

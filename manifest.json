@@ -1,23 +1,38 @@
 {
-   "background_page": "background.html",
-   "browser_action": {
-      "default_title": "",
-	  "default_popup": "popup.html"
-   },
-   "default_locale": "en",
-   "description": "__MSG_whdnotifier_description__",
-   "icons": {
-      "128": "icon_128.png"
-   },
-   "name": "__MSG_whdnotifier_name__",
-   "options_page": "options.html",
-   "permissions": [ "tabs", "http://*/", "https://*/", "notifications" ],
-   "version": "1.5",
-   "content_scripts": [
-	{
+    "manifest_version": 2,
+    
+    "default_locale": "en",
+    "name": "__MSG_whdnotifier_name__",
+    "description": "__MSG_whdnotifier_description__",
+    "version": "1.5",
+    "permissions": [ "tabs", "http://*/", "https://*/", "notifications" ],
+    
+    "icons": {
+        "128": "icon_128.png"
+    },
+    
+    "background": {
+        "page": "background.html"
+    },
+    
+    "browser_action": {
+        "default_title": "",
+        "default_popup": "popup.html"
+    },
+    
+    "options_page": "options.html",
+    
+    "content_scripts": [
+        {
 		"matches": ["http://*/helpdesk/WebObjects/Helpdesk.woa", "https://*/helpdesk/WebObjects/Helpdesk.woa",
 					"http://*/helpdesk/WebObjects/Helpdesk", "https://*/helpdesk/WebObjects/Helpdesk"],
 		"js": ["autoLogin.js"]
-	}
-   ]
+        }
+    ],
+    
+    "web_accessible_resources": [
+        "autoLogin.js",
+        "autoLogin2.js",
+        "icon_128.png"
+    ]
 }
