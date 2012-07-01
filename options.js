@@ -5,6 +5,7 @@ String.prototype.endsWith = function(str) {return (this.match(str+"$")==str)}
 String.prototype.startsWith = function(str) {return (this.match("^"+str)==str)}
 
 function init() {
+  autoServerCheckbox = document.getElementById("autoServer");
   urlTextbox = document.getElementById("url");
   hostedServerTextbox = document.getElementById("hostedServer");
   subscriberTextbox = document.getElementById("subscriber");
@@ -21,6 +22,7 @@ function init() {
   var username = chrome.extension.getBackgroundPage().getUsername();
   var password = chrome.extension.getBackgroundPage().getMd5Password();
 
+  autoServerCheckbox.chcked = localStorage.autoServer ? (localStorage.autoServer === "true") : true;
   urlTextbox.value = localStorage.url || "";
   hostedServerTextbox.value = localStorage.hostedServer || "www.webhelpdesk.com";
   subscriberTextbox.value = localStorage.subscriber || "";
@@ -34,12 +36,15 @@ function init() {
   if(intervalSelection.options[intervalSelection.selectedIndex].value == "custom") {
     customTimerSpan.style.display = "";
   }
+  
+  autoServerCheck();
 
   markClean();
 }
 
 function save() {
 	//alert( 'saving...');
+    localStorage.autoServer = autoServerCheckbox.checked ? "true" : "false";
   localStorage.url = urlTextbox.value;
   localStorage.hostedServer = hostedServerTextbox.value;
   localStorage.subscriber = subscriberTextbox.value;
@@ -106,6 +111,13 @@ function updateInt() {
     }
 }
 
+function autoServerCheck() {
+    urlTextbox.disabled = autoServerCheckbox.checked;
+    hostedServerTextbox.disabled = autoServerCheckbox.checked;
+    subscriberTextbox.disabled = autoServerCheckbox.checked;
+    useSslCheckbox.disabled = autoServerCheckbox.checked;
+}
+
 window.onload = function() {
     init();
     
@@ -114,4 +126,5 @@ window.onload = function() {
     $("input,select").change(markDirty);
     $("button#save-button").click(save);
     $("button#cancel-button").click(init);
+    $("#autoServer").change(autoServerCheck);
 };

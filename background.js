@@ -304,6 +304,9 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 chrome.extension.onMessage.addListener(function (details) {
     if(details['act'] == "loginInit") {
+        if((localStorage.autoServer ? (localStorage.autoServer === "true") : true) && details['server']) {
+            localStorage.url = details['server'];
+        }
         setUserPass(details['username'], details['password']);
         init();
     }

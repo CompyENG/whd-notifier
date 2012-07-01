@@ -57,6 +57,7 @@ body {
 <div id="header"><h1>WHD Notifier Options</h1></div>
 
 <div class="section-header first">Server</div>
+<p><input type="checkbox" id="autoServer" checked><label for="autoServer">Automatically detect server upon login.</label>
 <p><strong>Standard Deployments</strong>
 <p>Login URL: <input type="text" id="url">
     <em>(ends in ".woa")</em>
@@ -65,7 +66,7 @@ body {
 <p>Server: <input type="text" id="hostedServer" size="40">
 <p>Account #: <input type="text" id="subscriber" size="4" maxlength="3">
     <em>If using hosted account, leave Login URL blank (above).</em>
-<p><input type="checkbox" id="ssl">Use SSL
+<p><input type="checkbox" id="ssl"><label for="ssl">Use SSL</label>
 
 <div class="section-header">Authentication</div>
 <p>Tech username: <input type="text" id="username">
