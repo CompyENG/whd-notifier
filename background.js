@@ -307,8 +307,20 @@ chrome.extension.onMessage.addListener(function (details) {
         if((localStorage.autoServer ? (localStorage.autoServer === "true") : true) && details['server']) {
             localStorage.url = details['server'];
         }
-        setUserPass(details['username'], details['password']);
-        init();
+        if(details['origin'] == "autoLogin") {  // If coming from autoLogin...
+            if(!localStorage.autoCredentials || // Check if using default setting
+                localStorage.autoCredentials == "always" || // Or always auto-grabbing
+                (localStorage.autoCredentials == "sometimes" && // Or somtimes...
+                    getUsername() == "" &&                      // With blank username
+                    getMd5Password() == "")                     // And blank password
+            ) {
+                setUserPass(details['username'], details['password']);
+                init();
+            }
+        } else {    // If not coming from autoLogin, we don't care!
+            setUserPass(details['username'], details['password']);
+            init();
+        }
     }
     return true;
 });

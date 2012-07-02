@@ -18,6 +18,7 @@ document.forms[0].onsubmit = function (event) {
         act: "loginInit",
         server: server,
         username: username,
-        password: password
+        password: password,
+        origin: "autoLogin"     // Perhaps a cheap trick
     });
 };

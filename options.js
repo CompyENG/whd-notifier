@@ -10,6 +10,7 @@ function init() {
   hostedServerTextbox = document.getElementById("hostedServer");
   subscriberTextbox = document.getElementById("subscriber");
   useSslCheckbox = document.getElementById("ssl");
+  autoCredentialsSelection = document.getElementById("autoCredentials");
   usernameTextbox = document.getElementById("username");
   passwordTextbox = document.getElementById("password");
   saveUserPassCheckbox = document.getElementById("saveUserPass");
@@ -27,6 +28,7 @@ function init() {
   hostedServerTextbox.value = localStorage.hostedServer || "www.webhelpdesk.com";
   subscriberTextbox.value = localStorage.subscriber || "";
   useSslCheckbox.checked = localStorage.ssl ? (localStorage.ssl === "true") : true;
+  autoCredentialsSelection.selectedIndex = localStorage.autoCredentialsIdx || 0;
   usernameTextbox.value = username; //(localStorage.saveUserPass === "true") ? (localStorage.username || "") : (sessionStorage.username || "");
   passwordTextbox.value = (password != "") ? "*****" : ""; //(localStorage.saveUserPass === "true") ? (localStorage.md5password ? "*****" : "") : (sessionStorage.md5password ? "*****" : ""); ///localStorage.password || "";
   saveUserPassCheckbox.checked = localStorage.saveUserPass ? (localStorage.saveUserPass === "true") : false;
@@ -49,6 +51,8 @@ function save() {
   localStorage.hostedServer = hostedServerTextbox.value;
   localStorage.subscriber = subscriberTextbox.value;
   localStorage.ssl = useSslCheckbox.checked ? "true" : "false";
+  localStorage.autoCredentialsIdx = autoCredentialsSelection.selectedIndex;
+  localStorage.autoCredentials = autoCredentialsSelection.options[autoCredentialsSelection.selectedIndex].value;
   localStorage.saveUserPass = saveUserPassCheckbox.checked ? "true" : "false";
   /*
   if(localStorage.saveUserPass === "true" ) {

@@ -7,7 +7,8 @@ function save() {
     chrome.extension.sendMessage(extensionId, {
         act: "loginInit", 
         username: usernameTextbox.value, 
-        password: passwordTextbox.value
+        password: passwordTextbox.value,
+        origin: "popup"     // Just to mirror autoLogin
     });
 
     if(passwordTextbox.value != "") {

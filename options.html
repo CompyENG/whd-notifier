@@ -69,6 +69,12 @@ body {
 <p><input type="checkbox" id="ssl"><label for="ssl">Use SSL</label>
 
 <div class="section-header">Authentication</div>
+<p>Automatically grab cedentials
+    <select id="autoCredentials">
+        <option value="always">Always</option>
+        <option value="sometimes">Only if not already logged in</option>
+        <option value="never">Never</option>
+    </select>
 <p>Tech username: <input type="text" id="username">
 <p>Password: <input type="password" id="password">
 <p><input type="checkbox" id="saveUserPass"><label for="saveUserPass">Save username and password</label>
