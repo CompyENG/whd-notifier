@@ -4,7 +4,7 @@
     "default_locale": "en",
     "name": "__MSG_whdnotifier_name__",
     "description": "__MSG_whdnotifier_description__",
-    "version": "1.5",
+    "version": "1.6",
     "permissions": [ "tabs", "http://*/", "https://*/", "notifications" ],
     
     "icons": {
